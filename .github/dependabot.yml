@@ -1,0 +1,13 @@
+# Monthly, grouped dependency updates. Each update PR runs the full verify pipeline.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: monthly }
+    groups:
+      angular: { patterns: ['@angular/*', '@angular-devkit/*'] }
+      tooling: { patterns: ['*'], exclude-patterns: ['@angular/*', '@angular-devkit/*'] }
+    open-pull-requests-limit: 3
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }

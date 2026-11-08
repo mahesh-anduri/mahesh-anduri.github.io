@@ -1,0 +1,116 @@
+name: Verify & deploy
+
+# Every push and pull request is verified. Only main is published.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Test, audit & build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # A user site (<name>.github.io) is served from "/", any other repo from "/<repo>/".
+      - name: Work out site path
+        id: site
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          REPO="${GITHUB_REPOSITORY#*/}"
+          if [ "${REPO,,}" = "${OWNER}.github.io" ]; then BASE="/"; else BASE="/${REPO}/"; fi
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+          echo "url=https://${OWNER}.github.io${BASE}" >> "$GITHUB_OUTPUT"
+
+      # ── Gate 1: unit tests ─────────────────────────────────────
+      - name: Unit tests (Karma + Jasmine, with coverage)
+        run: npm run test:ci | tee unit-tests.log
+
+      # ── Build (static prerender) ───────────────────────────────
+      - name: Production build
+        run: npx ng build --base-href "${{ steps.site.outputs.base }}"
+
+      # ── Gate 2: end-to-end + accessibility ─────────────────────
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E + axe accessibility audit (WCAG 2.2 AA, both themes)
+        run: npx playwright test
+        env:
+          BASE: ${{ steps.site.outputs.base }}
+
+      # ── Gate 3: Lighthouse (reports, warns, never blocks) ──────
+      - name: Lighthouse CI
+        continue-on-error: true
+        run: |
+          BASE="${{ steps.site.outputs.base }}"
+          mkdir -p ".lh-site${BASE}"
+          cp -r dist/mahesh-portfolio/browser/. ".lh-site${BASE}"
+          npx lhci autorun \
+            --collect.url="http://localhost${BASE}" \
+            --collect.url="http://localhost${BASE}how-its-built/"
+
+      # ── Publish the evidence ───────────────────────────────────
+      - name: Write build-report.json (read by the "How it's built" page)
+        run: node scripts/build-report.mjs
+
+      - name: Finalise site (absolute social URLs, 404, no Jekyll)
+        run: |
+          OUT=dist/mahesh-portfolio/browser
+          URL="${{ steps.site.outputs.url }}"
+          for f in "$OUT/index.html" "$OUT/how-its-built/index.html"; do
+            sed -i "s#content=\"img/og.png\"#content=\"${URL}img/og.png\"#" "$f"
+          done
+          sed -i "s#<meta name=\"author\"#<meta property=\"og:url\" content=\"${URL}\"><link rel=\"canonical\" href=\"${URL}\"><meta name=\"author\"#" "$OUT/index.html"
+          sed -i "s#<meta name=\"author\"#<meta property=\"og:url\" content=\"${URL}how-its-built/\"><link rel=\"canonical\" href=\"${URL}how-its-built/\"><meta name=\"author\"#" "$OUT/how-its-built/index.html"
+          cp "$OUT/index.html" "$OUT/404.html"
+          touch "$OUT/.nojekyll"
+
+      - name: Keep test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          path: |
+            playwright-report/
+            coverage/
+            lhci-report/
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Upload site
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/mahesh-portfolio/browser
+
+  deploy:
+    name: Publish to GitHub Pages
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
