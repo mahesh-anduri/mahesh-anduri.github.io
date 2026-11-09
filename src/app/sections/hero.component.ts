@@ -15,7 +15,8 @@ import { PROFILE } from '../data/profile';
           <h1 id="hero-title">Interfaces that are <em>fast</em>, <em>accessible</em> &amp;&nbsp;built&nbsp;to&nbsp;last.</h1>
           <p class="lede">
             I'm {{ p.firstName }} - a senior UI &amp; full-stack developer with <strong>{{ p.years }}+ years</strong>
-            shipping enterprise Angular applications, micro-frontend platforms and Node.js &amp; Spring Boot services.
+            shipping enterprise Angular applications, micro-frontend platforms and backend services in
+            <strong>Java, Spring Boot &amp; JDBC</strong> and Node.js.
           </p>
           <div class="ctas">
             <a class="btn primary" routerLink="/" fragment="experience">

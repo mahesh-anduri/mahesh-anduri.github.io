@@ -27,7 +27,7 @@ import { SectionHeadComponent } from './section-head.component';
         <div class="grid">
           <div class="statement" appReveal>
             <p class="big">I specialise in building <mark>fast, accessible and modular</mark> applications with modern front-end frameworks and robust backend technologies.</p>
-            <p>With a strong command of Angular (v2–19), Node.js and cloud-native architectures, I deliver scalable, secure and maintainable web solutions that align with both business and user goals - and I enjoy mentoring the developers around me along the way.</p>
+            <p>With a strong command of Angular (v2–19) on the front end and Java, Spring Boot, JDBC and Node.js on the back end, plus cloud-native architectures, I deliver scalable, secure and maintainable web solutions that align with both business and user goals - and I enjoy mentoring the developers around me along the way.</p>
           </div>
 
           <dl class="facts" appReveal="120">

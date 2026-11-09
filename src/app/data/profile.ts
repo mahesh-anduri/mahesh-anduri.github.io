@@ -46,7 +46,7 @@ export const PROFILE = {
   name: 'Mahesh A',
   firstName: 'Mahesh',
   title: 'Senior Full-Stack Developer',
-  focus: 'UI Engineering · Angular · Micro Frontends',
+  focus: 'Angular · Micro Frontends · Java / Spring Boot',
   location: 'Irving, Texas',
   timeZone: 'America/Chicago',
   current: 'Randstad USA',
@@ -54,7 +54,7 @@ export const PROFILE = {
   openTo: 'W2 full-time roles',
   linkedin: 'https://www.linkedin.com/in/mahesh-a-893a3116a',
   /** Optional — buttons appear automatically when these are filled in */
-  email: '',
+  email: 'andurimaheswarareddy@gmail.com',
   github: '',
   /** e.g. '/resume.pdf' after dropping resume.pdf into /public */
   resumeUrl: '',
@@ -128,6 +128,11 @@ export const CAPABILITIES = [
     tags: ['Angular', 'Micro Frontends', 'NgRx', 'RxJS'],
   },
   {
+    title: 'Java & Spring Boot backends',
+    body: 'REST APIs and microservices built with Java and Spring Boot, with data access through JDBC and SQL against Oracle, SQL Server and MySQL.',
+    tags: ['Java', 'Spring Boot', 'JDBC', 'SQL'],
+  },
+  {
     title: 'Secure auth & real-time data',
     body: 'Integrating Auth0, GraphQL and JWT for secure, token-based authentication and real-time data access.',
     tags: ['Auth0', 'GraphQL', 'JWT'],
@@ -143,9 +148,9 @@ export const CAPABILITIES = [
     tags: ['Jenkins', 'Playwright', 'Cypress', 'CI/CD'],
   },
   {
-    title: 'Full-stack services',
-    body: 'Node.js, Express and Java Spring Boot services backed by MongoDB, Oracle, SQL Server and MySQL, deployed on AWS.',
-    tags: ['Node.js', 'Spring Boot', 'AWS', 'SQL'],
+    title: 'Node.js & cloud services',
+    body: 'Node.js and Express APIs and server-side rendering, deployed on AWS (Lambda, SNS/SQS, S3) and packaged with Docker.',
+    tags: ['Node.js', 'Express', 'AWS', 'Docker'],
   },
   {
     title: 'Leadership & mentoring',
@@ -157,7 +162,7 @@ export const CAPABILITIES = [
 /** A trailing * marks a core skill (highlighted). */
 export const SKILLS: Record<string, string[]> = {
   Frontend: ['Angular (v2–19)*', 'TypeScript*', 'JavaScript (ES6+)*', 'RxJS*', 'NgRx', 'ReactJS', 'React Native', 'AngularJS', 'Redux', 'Angular Material', 'HTML5', 'CSS3', 'SCSS', 'Tailwind CSS', 'Bootstrap', 'Ionic', 'D3.js', 'jQuery', 'Ext JS'],
-  Backend: ['Node.js*', 'Java*', 'Spring Boot*', 'GraphQL*', 'Express.js', 'RESTful APIs', 'Microservices', 'Server-Side Rendering', 'JSP', 'Apache Tomcat'],
+  Backend: ['Java*', 'Spring Boot*', 'JDBC*', 'Node.js*', 'GraphQL*', 'Express.js', 'RESTful APIs', 'Microservices', 'Server-Side Rendering', 'JSP', 'Apache Tomcat'],
   Data: ['SQL*', 'MongoDB', 'Oracle', 'SQL Server', 'MySQL'],
   'Cloud & DevOps': ['AWS Lambda', 'AWS SNS / SQS', 'AWS S3', 'CloudFormation', 'Docker', 'Jenkins', 'Git', 'GitHub Actions'],
   Testing: ['Cypress', 'Playwright', 'Jest', 'Mocha', 'Jasmine'],
